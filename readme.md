@@ -1,4 +1,4 @@
-# Rust - Bag of Words Embedder
+# Rust - BoW Embedder
 
 ## BoW (bag-of-words) embeddings model, in Rust
 
