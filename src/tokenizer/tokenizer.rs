@@ -18,7 +18,8 @@ impl Tokenizer {
         while let Some(token) = self.collect_next() {
             tokens.push(token);
         }
-        tokens
+
+        return tokens;
     }
 
     fn collect_next(&mut self) -> Option<Token> {
@@ -26,7 +27,7 @@ impl Tokenizer {
             return None;
         }
 
-        let current = self.chars[self.position];
+        let current: char = self.chars[self.position];
         if current.is_alphabetic() {
             return self.collect_identifier();
         } else if current.is_numeric() {
@@ -42,46 +43,49 @@ impl Tokenizer {
     }
 
     fn collect_identifier(&mut self) -> Option<Token> {
-        let start = self.position;
+        let start: usize = self.position;
         while self.position < self.chars.len() && self.chars[self.position].is_alphabetic() {
             self.position += 1;
         }
 
-        Some(Token::new(
+        return Some(Token::new(
             TokenType::Identifier,
             self.chars[start..self.position].iter().collect(),
-        ))
+        ));
     }
 
     fn collect_number(&mut self) -> Option<Token> {
-        let start = self.position;
+        let start: usize = self.position;
         while self.position < self.chars.len() && self.chars[self.position].is_numeric() {
             self.position += 1;
         }
 
-        Some(Token::new(
+        return Some(Token::new(
             TokenType::Number,
             self.chars[start..self.position].iter().collect(),
-        ))
+        ));
     }
 
     fn collect_whitespace(&mut self) -> Option<Token> {
-        let start = self.position;
+        let start: usize = self.position;
         while self.position < self.chars.len() && self.chars[self.position].is_whitespace() {
             self.position += 1;
         }
 
-        Some(Token::new(
+        return Some(Token::new(
             TokenType::Whitespace,
             self.chars[start..self.position].iter().collect(),
-        ))
+        ));
     }
 
     fn collect_punctuation(&mut self) -> Option<Token> {
-        let current = self.chars[self.position];
+        let current: char = self.chars[self.position];
         self.position += 1;
 
-        Some(Token::new(TokenType::Punctuation, current.to_string()))
+        return Some(Token::new(
+            TokenType::Punctuation, 
+            current.to_string()
+        ));
     }
 }
 
