@@ -27,6 +27,32 @@ fn train(sentences: &[&str]) -> HashMap<Token, usize> {
     return bag;
 }
 
+fn embed(input: &str, vocab: &HashMap<Token, usize>) -> Vec<f32> {
+    let mut vector: Vec<f32> = vec![0.0; vocab.len()];
+    let mut tokenizer: Tokenizer = Tokenizer::new(input.to_string());
+
+    let tokens: Vec<Token> = tokenizer.tokenize();
+    for token in tokens {
+        if let Some(&index) = vocab.get(&token) {
+            vector[index] += 1.0;
+        }
+    }
+
+    return vector;
+}
+
+fn build_vocab_index(bag: &HashMap<Token, usize>) -> HashMap<Token, usize> {
+    let mut vocab: HashMap<Token, usize> = HashMap::new();
+    let mut tokens: Vec<&Token> = bag.keys().collect();
+
+    tokens.sort();
+    for (index, token) in tokens.iter().enumerate() {
+        vocab.insert((*token).clone(), index);
+    }
+
+    return vocab;
+}
+
 fn main() {
     let sentences: Vec<&str> = Vec::from([
         "Hello, how are you?",
@@ -52,7 +78,10 @@ fn main() {
     ]);
 
     let bag: HashMap<Token, usize> = train(&sentences);
-    for (token, count) in bag {
-        println!("{:?}: {}", token, count);
-    }
+    let vocab: HashMap<Token, usize> = build_vocab_index(&bag);
+
+    let input: &str = "The cat is on the couch.";
+    let embedding: Vec<f32> = embed(input, &vocab);
+
+    println!("Embedding for '{}': {:?}", input, embedding);
 }
