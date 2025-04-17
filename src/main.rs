@@ -16,7 +16,7 @@ fn main() {
     let tokens: Vec<Token> = tokenizer.tokenize();
     for token in tokens {
         if bag.contains_key(&token) {
-            let count = bag.get_mut(&token).unwrap();
+            let count: &mut usize = bag.get_mut(&token).unwrap();
             *count += 1;
         } else {
             bag.insert(token, 1);
