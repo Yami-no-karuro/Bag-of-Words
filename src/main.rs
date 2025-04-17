@@ -33,7 +33,7 @@ fn main() {
 
     let mut bag: HashMap<Token, usize> = HashMap::new();
     for sentence in sentences {
-        let input = sentence.to_string(); 
+        let input: String = sentence.to_string(); 
 
         let mut tokenizer: Tokenizer = Tokenizer::new(input);
         let tokens: Vec<Token> = tokenizer.tokenize();
