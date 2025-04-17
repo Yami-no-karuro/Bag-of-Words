@@ -1,7 +1,4 @@
-#[derive(
-    Debug, 
-    PartialEq
-)]
+#[derive(Debug, PartialEq)]
 pub enum TokenType {
     Identifier,
     Number,
@@ -10,10 +7,7 @@ pub enum TokenType {
     Unknown,
 }
 
-#[derive(
-    Debug, 
-    PartialEq
-)]
+#[derive(Debug, PartialEq)]
 pub struct Token {
     pub token_type: TokenType,
     pub value: String,
