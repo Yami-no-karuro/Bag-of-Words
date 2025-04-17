@@ -5,11 +5,20 @@
 mod tokenizer;
 
 use tokenizer::{Token, Tokenizer};
+use std::collections::HashMap;
 
 fn main() {
     let input: String = "Hello! My Name is Carlo, i'm 26 years old and i'm a software developer!".to_string();
-    let mut tokenizer: Tokenizer = Tokenizer::new(input);
-    let tokens: Vec<Token> = tokenizer.tokenize();
 
-    dbg!(tokens);
+    let mut tokenizer: Tokenizer = Tokenizer::new(input);
+    let mut bag: HashMap<Token, usize> = HashMap::new();
+
+    let tokens: Vec<Token> = tokenizer.tokenize();
+    for token in tokens {
+        *bag.entry(token).or_insert(0) += 1;
+    }
+
+    for (token, count) in bag {
+        println!("{:?}: {}", token, count);
+    }
 }
