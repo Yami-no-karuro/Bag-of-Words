@@ -7,6 +7,26 @@ mod tokenizer;
 use tokenizer::{Token, Tokenizer};
 use std::collections::HashMap;
 
+fn train(sentences: &[&str]) -> HashMap<Token, usize> {
+    let mut bag: HashMap<Token, usize> = HashMap::new();
+    for sentence in sentences {
+        let input: String = sentence.to_string(); 
+
+        let mut tokenizer: Tokenizer = Tokenizer::new(input);
+        let tokens: Vec<Token> = tokenizer.tokenize();
+        for token in tokens {
+            if bag.contains_key(&token) {
+                let count: &mut usize = bag.get_mut(&token).unwrap();
+                *count += 1;
+            } else {
+                bag.insert(token, 1);
+            }
+        }
+    }
+
+    return bag;
+}
+
 fn main() {
     let sentences: Vec<&str> = Vec::from([
         "Hello, how are you?",
@@ -31,22 +51,7 @@ fn main() {
         "Every day is a new opportunity."
     ]);
 
-    let mut bag: HashMap<Token, usize> = HashMap::new();
-    for sentence in sentences {
-        let input: String = sentence.to_string(); 
-
-        let mut tokenizer: Tokenizer = Tokenizer::new(input);
-        let tokens: Vec<Token> = tokenizer.tokenize();
-        for token in tokens {
-            if bag.contains_key(&token) {
-                let count: &mut usize = bag.get_mut(&token).unwrap();
-                *count += 1;
-            } else {
-                bag.insert(token, 1);
-            }
-        }
-    }
-
+    let bag: HashMap<Token, usize> = train(&sentences);
     for (token, count) in bag {
         println!("{:?}: {}", token, count);
     }

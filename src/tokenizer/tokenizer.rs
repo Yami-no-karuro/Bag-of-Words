@@ -48,9 +48,14 @@ impl Tokenizer {
             self.position += 1;
         }
 
+        let identifier: String = self.chars[start..self.position]
+            .iter()
+            .collect::<String>()
+            .to_lowercase();
+
         return Some(Token::new(
-            TokenType::Identifier,
-            self.chars[start..self.position].iter().collect(),
+            TokenType::Identifier, 
+            identifier
         ));
     }
 
@@ -88,4 +93,3 @@ impl Tokenizer {
         ));
     }
 }
-
