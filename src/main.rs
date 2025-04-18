@@ -3,29 +3,11 @@
 #![allow(dead_code)]
 
 mod tokenizer;
+mod bow;
 
 use tokenizer::{Token, Tokenizer};
+use bow::BoW;
 use std::collections::HashMap;
-
-fn train(sentences: &[&str]) -> HashMap<Token, usize> {
-    let mut bag: HashMap<Token, usize> = HashMap::new();
-    for sentence in sentences {
-        let input: String = sentence.to_string(); 
-
-        let mut tokenizer: Tokenizer = Tokenizer::new(input);
-        let tokens: Vec<Token> = tokenizer.tokenize();
-        for token in tokens {
-            if bag.contains_key(&token) {
-                let count: &mut usize = bag.get_mut(&token).unwrap();
-                *count += 1;
-            } else {
-                bag.insert(token, 1);
-            }
-        }
-    }
-
-    return bag;
-}
 
 fn main() {
     let sentences: Vec<&str> = Vec::from([
@@ -51,6 +33,8 @@ fn main() {
         "Every day is a new opportunity."
     ]);
 
-    let bag: HashMap<Token, usize> = train(&sentences);
-    println!("Bag-of-Words: {:?}", bag);
+    let bow: BoW = BoW::train(&sentences);
+    for (token, count) in bow.iter() {
+        println!("{:?}: {}", token, count);
+    }
 }
