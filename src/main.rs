@@ -27,25 +27,6 @@ fn train(sentences: &[&str]) -> HashMap<Token, usize> {
     return bag;
 }
 
-fn embed(sentence: &str, bag: &HashMap<Token, usize>) -> Vec<f32> {
-    let input: String = sentence.to_string();
-
-    let mut tokenizer: Tokenizer = Tokenizer::new(input.to_string());
-    let input_tokens: Vec<Token> = tokenizer.tokenize();
-
-    let mut embedding: Vec<f32> = Vec::with_capacity(bag.len());
-    for bag_tokens in bag.keys() {
-        if input_tokens.contains(bag_tokens) {
-            let freq: &usize = bag.get(bag_tokens).unwrap();
-            embedding.push(1.0 / (*freq as f32));
-        } else {
-            embedding.push(0.0);
-        }
-    }
-
-    return embedding;
-}
-
 fn main() {
     let sentences: Vec<&str> = Vec::from([
         "Hello, how are you?",
@@ -71,9 +52,5 @@ fn main() {
     ]);
 
     let bag: HashMap<Token, usize> = train(&sentences);
-    println!("BoW: {:?}", bag);
-
-    let input: &str = "I enjoy programming!";
-    let embedding: Vec<f32> = embed(input, &bag);
-    println!("Embedding: {:?}", embedding);
+    println!("Bag-of-Words: {:?}", bag);
 }
