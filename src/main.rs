@@ -2,12 +2,11 @@
 #![allow(unused_variables)]
 #![allow(dead_code)]
 
-mod tokenizer;
 mod bow;
+mod tokenizer;
 
-use tokenizer::{Token, Tokenizer};
 use bow::BoW;
-use std::collections::HashMap;
+use tokenizer::{Token, Tokenizer};
 
 fn main() {
     let sentences: Vec<&str> = Vec::from([
