@@ -42,4 +42,3 @@ impl BoW {
         return self.bag.iter();
     }
 }
-
