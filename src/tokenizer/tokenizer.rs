@@ -23,11 +23,11 @@ impl Tokenizer {
     }
 
     fn collect_next(&mut self) -> Option<Token> {
-        let current: char = self.chars[self.position];
         if self.position >= self.chars.len() {
             return None;
         }
 
+        let current: char = self.chars[self.position];
         if current.is_alphabetic() {
             return self.collect_identifier();
         } else if current.is_numeric() {
