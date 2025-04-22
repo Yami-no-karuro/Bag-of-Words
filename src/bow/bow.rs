@@ -39,7 +39,9 @@ impl BoW {
     }
 
     pub fn save(&self) {
-        let mut f: File = File::create("storage/data").unwrap();
+        let mut f: File = File::create("storage/data")
+            .unwrap();
+
         for (token, count) in self.iter() {
             for c in token.value.chars() {
                 write!(&mut f, "{:08b}", c as u8)
