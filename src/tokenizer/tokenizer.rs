@@ -69,8 +69,9 @@ impl Tokenizer {
         }
 
         return Some(Token::new(
-            TokenType::Number,
-            self.chars[start..self.position].iter().collect(),
+            TokenType::Number, 
+            self.chars[start..self.position].iter()
+                .collect(),
         ));
     }
 
@@ -82,7 +83,8 @@ impl Tokenizer {
 
         return Some(Token::new(
             TokenType::Whitespace,
-            self.chars[start..self.position].iter().collect(),
+            self.chars[start..self.position].iter()
+                .collect(),
         ));
     }
 

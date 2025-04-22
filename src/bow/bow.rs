@@ -20,7 +20,9 @@ impl BoW {
             let tokens: Vec<Token> = tokenizer.tokenize();
             for token in tokens {
                 if bag.contains_key(&token) {
-                    let count: &mut usize = bag.get_mut(&token).unwrap();
+                    let count: &mut usize = bag.get_mut(&token)
+                        .unwrap();
+
                     *count += 1;
                 } else {
                     bag.insert(token, 1);
@@ -31,14 +33,21 @@ impl BoW {
         return Self { bag };
     }
 
+    pub fn load(&self) -> Self {
+        let mut bag: HashMap<Token, usize> = HashMap::new();
+        return Self { bag };
+    }
+
     pub fn save(&self) {
         let mut f: File = File::create("storage/data").unwrap();
         for (token, count) in self.iter() {
             for c in token.value.chars() {
-                write!(&mut f, "{:08b}", c as u8).unwrap();
+                write!(&mut f, "{:08b}", c as u8)
+                    .unwrap();
             }
 
-            write!(&mut f, "{:08b}", *count as u8).unwrap();
+            write!(&mut f, "{:08b}", *count as u8)
+                .unwrap();
         }
     }
 
