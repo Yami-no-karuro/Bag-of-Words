@@ -4,13 +4,13 @@ pub enum TokenType {
     Number,
     Punctuation,
     Whitespace,
-    Unknown,
+    Unknown
 }
 
 #[derive(Debug, Eq, PartialEq, Hash)]
 pub struct Token {
     pub token_type: TokenType,
-    pub value: String,
+    pub value: String
 }
 
 impl Token {

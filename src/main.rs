@@ -33,7 +33,5 @@ fn main() {
     ]);
 
     let bow: BoW = BoW::train(&sentences);
-    for (token, count) in bow.iter() {
-        println!("{:?}: {}", token, count);
-    }
+    bow.save();
 }

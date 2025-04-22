@@ -13,9 +13,10 @@ impl BoW {
     pub fn train(sentences: &[&str]) -> Self {
         let mut bag: HashMap<Token, usize> = HashMap::new();
         for sentence in sentences {
-            let input: String = sentence.to_string(); 
 
+            let input: String = sentence.to_string(); 
             let mut tokenizer: Tokenizer = Tokenizer::new(input);
+
             let tokens: Vec<Token> = tokenizer.tokenize();
             for token in tokens {
                 if bag.contains_key(&token) {
@@ -28,6 +29,17 @@ impl BoW {
         }
 
         return Self { bag };
+    }
+
+    pub fn save(&self) {
+        let mut f: File = File::create("storage/data").unwrap();
+        for (token, count) in self.iter() {
+            for c in token.value.chars() {
+                write!(&mut f, "{:08b}", c as u8).unwrap();
+            }
+
+            write!(&mut f, "{:08b}", *count as u8).unwrap();
+        }
     }
 
     pub fn get(&self, token: &Token) -> Option<&usize> {
