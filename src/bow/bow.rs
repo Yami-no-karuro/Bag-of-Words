@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Read, Write, BufReader, BufRead};
 
-use crate::tokenizer::{Token, Tokenizer};
+use crate::tokenizer::{Token, TokenType, Tokenizer};
 
 #[derive(Debug)]
 pub struct BoW {
@@ -18,8 +18,10 @@ impl BoW {
 
             let tokens: Vec<Token> = tokenizer.tokenize();
             for token in tokens {
-                let value = token.value;
-                *bag.entry(value).or_insert(0) += 1;
+                if token.token_type == TokenType::Identifier {
+                    let value = token.value;
+                    *bag.entry(value).or_insert(0) += 1;
+                }
             }
         }
 
