@@ -1,62 +1,69 @@
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io::{Read, Write, BufReader, BufRead};
 
 use crate::tokenizer::{Token, Tokenizer};
 
 #[derive(Debug)]
 pub struct BoW {
-    bag: HashMap<Token, usize>
+    bag: HashMap<String, usize>
 }
 
 impl BoW {
     pub fn train(sentences: &[&str]) -> Self {
-        let mut bag: HashMap<Token, usize> = HashMap::new();
+        let mut bag: HashMap<String, usize> = HashMap::new();
         for sentence in sentences {
-
             let input: String = sentence.to_string(); 
             let mut tokenizer: Tokenizer = Tokenizer::new(input);
 
             let tokens: Vec<Token> = tokenizer.tokenize();
             for token in tokens {
-                if bag.contains_key(&token) {
-                    let count: &mut usize = bag.get_mut(&token)
-                        .unwrap();
-
-                    *count += 1;
-                } else {
-                    bag.insert(token, 1);
-                }
+                let value = token.value;
+                *bag.entry(value).or_insert(0) += 1;
             }
         }
 
         return Self { bag };
     }
 
-    pub fn load(&self) -> Self {
-        let mut bag: HashMap<Token, usize> = HashMap::new();
+    pub fn load() -> Self {
+        let mut bag: HashMap<String, usize> = HashMap::new();
+        let f: File = File::open("models/model.csv").unwrap();
+
+        let reader: BufReader<File> = BufReader::new(f);
+        for line in reader.lines() {
+            let str_line: String = line.unwrap();
+            let parts: Vec<&str> = str_line.split(",").collect();
+
+            let token: &str = parts[0].trim_matches('"');
+            let count: usize = parts[1].trim_matches('"')
+                .parse::<usize>()
+                .unwrap_or_default();
+
+            if count > 0 {
+                bag.insert(token.to_string(), count);
+            }
+        }
+
         return Self { bag };
     }
 
     pub fn save(&self) {
-        let mut f: File = File::create("models/model.csv")
-            .unwrap();
-
+        let mut f: File = File::create("models/model.csv").unwrap();
         for (token, count) in self.iter() {
-            writeln!(&mut f, "\"{}\",\"{}\"", &token.value, *count)
-                .unwrap();
+            writeln!(&mut f, "\"{}\",\"{}\"", token, count).unwrap();
         }
     }
 
     pub fn get(&self, token: &Token) -> Option<&usize> {
-        return self.bag.get(token);
+        return self.bag.get(&token.value);
     }
 
-    pub fn tokens(&self) -> impl Iterator<Item = &Token> {
+    pub fn tokens(&self) -> impl Iterator<Item = &String> {
         return self.bag.keys();
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = (&Token, &usize)> {
+    pub fn iter(&self) -> impl Iterator<Item = (&String, &usize)> {
         return self.bag.iter();
     }
 }

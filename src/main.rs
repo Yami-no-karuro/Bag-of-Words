@@ -17,6 +17,9 @@ fn main() {
         "I enjoy programming in Rust."
     ]);
 
-    let bag_of_words: BoW = BoW::train(&sentences);
-    bag_of_words.save();
+    let trained: BoW = BoW::train(&sentences);
+    trained.save();
+
+    let loaded: BoW = BoW::load();
+    dbg!(loaded);
 }
