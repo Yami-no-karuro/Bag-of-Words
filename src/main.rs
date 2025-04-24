@@ -14,24 +14,9 @@ fn main() {
         "I'm good, thank you very much!",
         "How's it going today?",
         "Today the weather is really nice.",
-        "I enjoy programming in Rust.",
-        "I just finished reading an interesting book.",
-        "What do you think about the new movie?",
-        "Shall we go for a coffee together?",
-        "Technology is changing the world.",
-        "Tomorrow I have an important appointment.",
-        "Have you eaten yet?",
-        "The cat is sleeping on the couch.",
-        "I'd like to travel more this year.",
-        "This morning I woke up late.",
-        "Music relaxes me a lot.",
-        "I am learning to use neural networks.",
-        "This project is very stimulating.",
-        "Do you want to go out tonight?",
-        "I bought a new mechanical keyboard.",
-        "Every day is a new opportunity."
+        "I enjoy programming in Rust."
     ]);
 
-    let bow: BoW = BoW::train(&sentences);
-    bow.save();
+    let bag_of_words: BoW = BoW::train(&sentences);
+    bag_of_words.save();
 }

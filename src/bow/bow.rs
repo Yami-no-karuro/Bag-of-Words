@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{BufReader, BufWriter, Read, Write};
+use std::io::{Read, Write};
 
 use crate::tokenizer::{Token, Tokenizer};
 
@@ -39,16 +39,11 @@ impl BoW {
     }
 
     pub fn save(&self) {
-        let mut f: File = File::create("storage/data")
+        let mut f: File = File::create("models/model.csv")
             .unwrap();
 
         for (token, count) in self.iter() {
-            for c in token.value.chars() {
-                write!(&mut f, "{:08b}", c as u8)
-                    .unwrap();
-            }
-
-            write!(&mut f, "{:08b}", *count as u8)
+            writeln!(&mut f, "\"{}\",\"{}\"", &token.value, *count)
                 .unwrap();
         }
     }
