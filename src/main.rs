@@ -18,8 +18,8 @@ fn main() {
     ]);
 
     let trained: BoW = BoW::train(&sentences);
-    trained.save();
+    trained.save("example");
 
-    let loaded: BoW = BoW::load();
+    let loaded: BoW = BoW::load("example");
     dbg!(loaded);
 }

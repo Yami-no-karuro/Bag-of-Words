@@ -28,9 +28,10 @@ impl BoW {
         return Self { bag };
     }
 
-    pub fn load() -> Self {
+    pub fn load(name: &str) -> Self {
         let mut bag: HashMap<String, usize> = HashMap::new();
-        let f: File = File::open("models/model.csv").unwrap();
+        let path: String = format!("models/{}.csv", name);
+        let f: File = File::open(path).unwrap();
 
         let reader: BufReader<File> = BufReader::new(f);
         for line in reader.lines() {
@@ -50,8 +51,9 @@ impl BoW {
         return Self { bag };
     }
 
-    pub fn save(&self) {
-        let mut f: File = File::create("models/model.csv").unwrap();
+    pub fn save(&self, name: &str) {
+        let path: String = format!("models/{}.csv", name);
+        let mut f: File = File::create(path).unwrap();
         for (token, count) in self.iter() {
             writeln!(&mut f, "\"{}\",\"{}\"", token, count).unwrap();
         }
