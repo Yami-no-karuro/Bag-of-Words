@@ -36,7 +36,7 @@ impl BoW {
         let reader: BufReader<File> = BufReader::new(f);
         for line in reader.lines() {
             let str_line: String = line.unwrap();
-            let parts: Vec<&str> = str_line.split(",").collect();
+            let parts: Vec<&str> = str_line.split("\",\"").collect();
 
             let token: &str = parts[0].trim_matches('"');
             let count: usize = parts[1].trim_matches('"')
