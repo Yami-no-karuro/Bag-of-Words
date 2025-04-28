@@ -3,7 +3,6 @@ pub enum TokenType {
     Identifier,
     Number,
     Punctuation,
-    Whitespace,
     Unknown
 }
 

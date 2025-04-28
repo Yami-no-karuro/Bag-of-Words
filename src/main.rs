@@ -21,5 +21,5 @@ fn main() {
     trained.save("example");
 
     let loaded: BoW = BoW::load("example");
-    dbg!(loaded);
+    // ...
 }

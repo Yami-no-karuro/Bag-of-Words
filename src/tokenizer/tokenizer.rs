@@ -32,8 +32,6 @@ impl Tokenizer {
             return self.collect_identifier();
         } else if current.is_numeric() {
             return self.collect_number();
-        } else if current.is_whitespace() {
-            return self.collect_whitespace();
         } else if ",;.:!?()[]{}\"'".contains(current) {
             return self.collect_punctuation();
         } else {
@@ -70,19 +68,6 @@ impl Tokenizer {
 
         return Some(Token::new(
             TokenType::Number, 
-            self.chars[start..self.position].iter()
-                .collect(),
-        ));
-    }
-
-    fn collect_whitespace(&mut self) -> Option<Token> {
-        let start: usize = self.position;
-        while self.position < self.chars.len() && self.chars[self.position].is_whitespace() {
-            self.position += 1;
-        }
-
-        return Some(Token::new(
-            TokenType::Whitespace,
             self.chars[start..self.position].iter()
                 .collect(),
         ));
