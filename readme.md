@@ -1,6 +1,6 @@
-# Rust - Bag-of-Words
+# Rust - Search Engine 
 
-## BoW (bag-of-words) model, in Rust
+## BoW search engine, in Rust
 
 ### Intro
 
@@ -8,3 +8,4 @@ The [(BoW) bag-of-words](https://en.wikipedia.org/wiki/Bag-of-words_model) model
 It is used in [Natural Language Processing](https://en.wikipedia.org/wiki/Natural_language_processing) and information retrieval (IR).  
 It disregards word order (and thus most of syntax or grammar) but captures multiplicity.  
 (More on [BoW](https://en.wikipedia.org/wiki/Bag-of-words_model) on [Wikipedia](https://en.wikipedia.org/wiki/Main_Page))
+

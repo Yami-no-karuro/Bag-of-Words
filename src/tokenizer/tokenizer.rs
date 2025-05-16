@@ -1,4 +1,7 @@
-use super::types::{Token, TokenType};
+use super::types::{
+    Token, 
+    TokenType
+};
 
 pub struct Tokenizer {
     chars: Vec<char>,
@@ -83,3 +86,4 @@ impl Tokenizer {
         ));
     }
 }
+

@@ -1,8 +1,17 @@
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{Read, Write, BufReader, BufRead};
+use std::io::{
+    Read, 
+    Write, 
+    BufReader, 
+    BufRead
+};
 
-use crate::tokenizer::{Token, TokenType, Tokenizer};
+use crate::tokenizer::{
+    Token, 
+    TokenType, 
+    Tokenizer
+};
 
 #[derive(Debug)]
 pub struct BoW {
@@ -10,18 +19,16 @@ pub struct BoW {
 }
 
 impl BoW {
-    pub fn train(sentences: &[&str]) -> Self {
+    pub fn build(input: String) -> Self {
         let mut bag: HashMap<String, usize> = HashMap::new();
-        for sentence in sentences {
-            let input: String = sentence.to_string(); 
-            let mut tokenizer: Tokenizer = Tokenizer::new(input);
+        let mut tokenizer: Tokenizer = Tokenizer::new(input);
 
-            let tokens: Vec<Token> = tokenizer.tokenize();
-            for token in tokens {
-                if token.token_type == TokenType::Identifier {
-                    let value = token.value;
-                    *bag.entry(value).or_insert(0) += 1;
-                }
+        let tokens: Vec<Token> = tokenizer.tokenize();
+        for token in tokens {
+            if token.token_type == TokenType::Identifier {
+                let value = token.value;
+                *bag.entry(value)
+                    .or_insert(0) += 1;
             }
         }
 
@@ -31,12 +38,14 @@ impl BoW {
     pub fn load(name: &str) -> Self {
         let mut bag: HashMap<String, usize> = HashMap::new();
         let path: String = format!("models/{}.csv", name);
-        let f: File = File::open(path).unwrap();
+        let f: File = File::open(path)
+            .unwrap();
 
         let reader: BufReader<File> = BufReader::new(f);
         for line in reader.lines() {
             let str_line: String = line.unwrap();
-            let parts: Vec<&str> = str_line.split("\",\"").collect();
+            let parts: Vec<&str> = str_line.split("\",\"")
+                .collect();
 
             let token: &str = parts[0].trim_matches('"');
             let count: usize = parts[1].trim_matches('"')
@@ -53,9 +62,12 @@ impl BoW {
 
     pub fn save(&self, name: &str) {
         let path: String = format!("models/{}.csv", name);
-        let mut f: File = File::create(path).unwrap();
+        let mut f: File = File::create(path)
+            .unwrap();
+
         for (token, count) in self.iter() {
-            writeln!(&mut f, "\"{}\",\"{}\"", token, count).unwrap();
+            writeln!(&mut f, "\"{}\",\"{}\"", token, count)
+                .unwrap();
         }
     }
 
@@ -71,3 +83,4 @@ impl BoW {
         return self.bag.iter();
     }
 }
+
