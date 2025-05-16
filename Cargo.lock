@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "Bow-SearchEngine"
+name = "Search-Engine"
 version = "0.1.0"
