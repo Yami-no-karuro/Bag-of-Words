@@ -37,7 +37,7 @@ impl BoW {
 
     pub fn load(name: &str) -> Self {
         let mut bag: HashMap<String, usize> = HashMap::new();
-        let path: String = format!("models/{}.csv", name);
+        let path: String = format!("bags/{}.csv", name);
         let f: File = File::open(path)
             .unwrap();
 
@@ -61,7 +61,7 @@ impl BoW {
     }
 
     pub fn save(&self, name: &str) {
-        let path: String = format!("models/{}.csv", name);
+        let path: String = format!("bags/{}.csv", name);
         let mut f: File = File::create(path)
             .unwrap();
 

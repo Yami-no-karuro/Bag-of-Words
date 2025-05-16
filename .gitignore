@@ -1,4 +1,4 @@
 /target
 
-/models/*
-!/models/.gitkeep
+/bags/*
+!/bags/.gitkeep
