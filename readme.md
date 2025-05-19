@@ -10,5 +10,5 @@ It disregards word order (and thus most of syntax or grammar) but captures multi
 (More on [BoW](https://en.wikipedia.org/wiki/Bag-of-words_model), [Natural Language Processing](https://en.wikipedia.org/wiki/Natural_language_processing) and [Information Retrieval](https://en.wikipedia.org/wiki/Information_retrieval) on [Wikipedia](https://en.wikipedia.org/wiki/Main_Page))
 
 Example..  
-`bin/console ./source/ "Who is the lord of the rings?"`
+`cargo run ./source/ "Who is the lord of the rings?"`
 
