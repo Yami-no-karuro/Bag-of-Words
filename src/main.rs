@@ -5,6 +5,18 @@
 mod bow;
 mod tokenizer;
 
+use std::env;
+use std::process;
+
+use std::fs;
+use std::fs::File;
+
+use std::io;
+use std::io::Read;
+
+use std::path;
+use std::path::PathBuf;
+
 use bow::BoW;
 use tokenizer::{
     Token, 
@@ -12,18 +24,29 @@ use tokenizer::{
 };
 
 fn main() {
-    let query: &str = "Lo stregone e l'anello.";
-    let books: Vec<(&str, &str)> = Vec::from([
-        ("book-01", "Il romanzo ha inizio con la festa del 111º compleanno di Bilbo e del 33° di suo nipote Frodo."),
-        ("book-02", "Alla fine della festa, Bilbo comunica a tutti i presenti che intende lasciare la Contea per sempre e, dopo essersi infilato l'anello, sparisce."),
-        ("book-03", "Lo stregone comincia a sospettare della natura dell'anello, perciò consiglia a Frodo di non adoperarlo mai e si allontana da Casa Baggins alla ricerca della verità."),
-        ("book-04", "Diciassette anni dopo, Gandalf scopre che l'anello in possesso di Frodo è l'Unico Anello, forgiato molti anni prima dall'Oscuro Signore Sauron."),
-        ("book-05", "Sauron tuttavia lo perse dopo essere stato sconfitto dal re elfico Gil-galad e dal re dei Dúnedain Elendil al culmine della battaglia dell'Ultima Alleanza tra Elfi e Uomini.")
-    ]);
+    let args: Vec<String> = env::args()
+        .collect();
 
-    for book in books {
-        let input: String = String::from(book.1);
-        let bow: BoW = BoW::build(input);
-        bow.save(book.0);
+    if args.len() < 2 {
+        eprintln!("Invalid arguments.");
+        eprintln!("Usage: {} <dir>", args[0]);
+        process::exit(1);
+    }
+
+    let source_dir: &str = &args[1];
+    if let Ok(paths) = fs::read_dir(source_dir) {
+        for path in paths {
+            let source: path::PathBuf = path.unwrap()
+                .path();
+
+            let mut content: String = String::new();
+            let mut f: File = File::open(source)
+                .unwrap();
+
+            f.read_to_string(&mut content).unwrap();
+            let bag: BoW = BoW::build(content);
+            dbg!(bag);
+        }
     }
 }
+
