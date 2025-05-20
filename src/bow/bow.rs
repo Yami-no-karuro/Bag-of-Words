@@ -35,6 +35,18 @@ impl BoW {
         return Self { bag };
     }
 
+    pub fn tfidf(&self, idf: &HashMap<String, f64>) -> HashMap<String, f64> {
+        let mut tfidf_vec: HashMap<String, f64> = HashMap::new();
+        for (token, &tf_count) in self.iter() {
+            if let Some(&idf_val) = idf.get(token) {
+                let tfidf = (tf_count as f64) * idf_val;
+                tfidf_vec.insert(token.clone(), tfidf);
+            }
+        }
+
+        return tfidf_vec;
+    }
+
     pub fn load(name: &str) -> Self {
         let mut bag: HashMap<String, usize> = HashMap::new();
         let path: String = format!("bags/{}.csv", name);
