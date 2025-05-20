@@ -50,8 +50,8 @@ fn main() {
     let q_bag: BoW = BoW::build(query.to_string());
     let q_tfidf = q_bag.tfidf(&s_idf);
 
-    println!("\nQuery: \"{}\"", query);
-    println!("\nResults:");
+    println!("Query: \"{}\"", query);
+    println!("Results:");
 
     for (i, doc_bag) in s_bags.iter().enumerate() {
         let doc_tfidf: HashMap<String, f64> = doc_bag.tfidf(&s_idf);
