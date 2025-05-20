@@ -4,50 +4,25 @@
 
 mod bow;
 mod tokenizer;
+mod utils;
 
 use std::env;
 use std::process;
+use std::collections::HashMap;
 use std::fs;
 use std::fs::File;
 use std::io;
 use std::io::Read;
 use std::path;
 use std::path::PathBuf;
-use std::collections::HashMap;
+
+use utils::cosine_similarity;
 
 use bow::{BoW, DF};
 use tokenizer::{
     Token, 
     Tokenizer
 };
-
-fn cosine_similarity(vec_a: &HashMap<String, f64>, vec_b: &HashMap<String, f64>) -> f64 {
-    let mut dot_product: f64 = 0.0;
-    for (token, value_a) in vec_a.iter() {
-        if let Some(value_b) = vec_b.get(token) {
-            dot_product += value_a * value_b;
-        }
-    }
-
-    let mut sum_squares_a: f64 = 0.0;
-    for value in vec_a.values() {
-        sum_squares_a += value * value;
-    }
-
-    let mut sum_squares_b: f64 = 0.0;
-    for value in vec_b.values() {
-        sum_squares_b += value * value;
-    }
-
-    let norm_a = sum_squares_a.sqrt();
-    let norm_b = sum_squares_b.sqrt();
-    if norm_a == 0.0 || norm_b == 0.0 {
-        return 0.0;
-    }
-
-    let similarity = dot_product / (norm_a * norm_b);
-    return similarity;
-}
 
 fn main() {
     let args: Vec<String> = env::args()
@@ -85,9 +60,10 @@ fn main() {
     let q_tfidf = q_bag.tfidf(&s_idf);
 
     for (i, doc_bag) in s_bags.iter().enumerate() {
-        let doc_tfidf = doc_bag.tfidf(&s_idf);
-        let sim = cosine_similarity(&q_tfidf, &doc_tfidf);
-        println!("Doc {}: score = {:.4}", i, sim);
+        let doc_tfidf: HashMap<String, f64> = doc_bag.tfidf(&s_idf);
+        let sim: f64 = cosine_similarity(&q_tfidf, &doc_tfidf);
+
+        println!("{} - Score = {:.4}", i, sim);
     }
 }
 
