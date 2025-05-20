@@ -34,9 +34,7 @@ impl DF {
         let mut idf_map: HashMap<String, f64> = HashMap::new();
         let documents: f64 = self.documents as f64;
         for (token, &df_count) in &self.frequencies {
-            let idf: f64 = (documents / (1.0 + df_count as f64))
-                .ln();
-
+            let idf: f64 = (documents / (1.0 + df_count as f64)).ln();
             idf_map.insert(token.clone(), idf);
         }
 

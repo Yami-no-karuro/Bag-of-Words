@@ -21,25 +21,32 @@ use tokenizer::{
     Tokenizer
 };
 
-fn cosine_similarity(
-    a: &HashMap<String, f64>,
-    b: &HashMap<String, f64>
-) -> f64 {
+fn cosine_similarity(vec_a: &HashMap<String, f64>, vec_b: &HashMap<String, f64>) -> f64 {
     let mut dot_product: f64 = 0.0;
-    for (token, a_val) in a.iter() {
-        if let Some(b_val) = b.get(token) {
-            dot_product += a_val * b_val;
+    for (token, value_a) in vec_a.iter() {
+        if let Some(value_b) = vec_b.get(token) {
+            dot_product += value_a * value_b;
         }
     }
 
-    let norm_a: f64 = a.values().map(|v| v * v).sum::<f64>().sqrt();
-    let norm_b: f64 = b.values().map(|v| v * v).sum::<f64>().sqrt();
+    let mut sum_squares_a: f64 = 0.0;
+    for value in vec_a.values() {
+        sum_squares_a += value * value;
+    }
 
+    let mut sum_squares_b: f64 = 0.0;
+    for value in vec_b.values() {
+        sum_squares_b += value * value;
+    }
+
+    let norm_a = sum_squares_a.sqrt();
+    let norm_b = sum_squares_b.sqrt();
     if norm_a == 0.0 || norm_b == 0.0 {
         return 0.0;
     }
 
-    return dot_product / (norm_a * norm_b);
+    let similarity = dot_product / (norm_a * norm_b);
+    return similarity;
 }
 
 fn main() {

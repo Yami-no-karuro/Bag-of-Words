@@ -26,7 +26,7 @@ impl BoW {
         let tokens: Vec<Token> = tokenizer.tokenize();
         for token in tokens {
             if token.token_type == TokenType::Identifier {
-                let value = token.value;
+                let value: String = token.value;
                 *bag.entry(value)
                     .or_insert(0) += 1;
             }
@@ -39,7 +39,7 @@ impl BoW {
         let mut tfidf_vec: HashMap<String, f64> = HashMap::new();
         for (token, &tf_count) in self.iter() {
             if let Some(&idf_val) = idf.get(token) {
-                let tfidf = (tf_count as f64) * idf_val;
+                let tfidf: f64 = (tf_count as f64) * idf_val;
                 tfidf_vec.insert(token.clone(), tfidf);
             }
         }
