@@ -1,6 +1,3 @@
-#![allow(unused_variables)]
-#![allow(dead_code)]
-
 mod bow;
 mod tokenizer;
 mod utils;
@@ -30,6 +27,7 @@ fn main() {
     let query: &str = &args[2];
 
     println!("Sources:");
+
     let mut s_bags: Vec<BoW> = Vec::new();
     if let Ok(paths) = fs::read_dir(source) {
         for (idx, path) in paths.enumerate() {
@@ -54,7 +52,8 @@ fn main() {
     let q_tfidf = q_bag.tfidf(&s_idf);
 
     println!("\nQuery: \"{}\"", query);
-    println!("Results:");
+    println!("\nResults:");
+
     for (i, doc_bag) in s_bags.iter().enumerate() {
         let doc_tfidf: HashMap<String, f64> = doc_bag.tfidf(&s_idf);
         let sim: f64 = cosine_similarity(&q_tfidf, &doc_tfidf);

@@ -46,7 +46,7 @@ impl BoW {
         return tfidf_vec;
     }
 
-    pub fn load(name: &str) -> Self {
+    pub fn _load(name: &str) -> Self {
         let mut bag: HashMap<String, usize> = HashMap::new();
         let path: String = format!("bags/{}.csv", name);
         let f: File = File::open(path)
@@ -71,7 +71,7 @@ impl BoW {
         return Self { bag };
     }
 
-    pub fn save(&self, name: &str) {
+    pub fn _save(&self, name: &str) {
         let path: String = format!("bags/{}.csv", name);
         let mut f: File = File::create(path)
             .unwrap();
@@ -80,10 +80,6 @@ impl BoW {
             writeln!(&mut f, "\"{}\",\"{}\"", token, count)
                 .unwrap();
         }
-    }
-
-    pub fn get(&self, token: &Token) -> Option<&usize> {
-        return self.bag.get(&token.value);
     }
 
     pub fn tokens(&self) -> impl Iterator<Item = &String> {
