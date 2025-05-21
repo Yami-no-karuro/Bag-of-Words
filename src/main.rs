@@ -11,7 +11,10 @@ use std::fs::File;
 use std::path;
 
 use utils::cosine_similarity;
-use bow::{BoW, DF};
+use bow::{
+    BoW, 
+    DF
+};
 
 fn main() {
     let args: Vec<String> = env::args()
@@ -56,7 +59,6 @@ fn main() {
     for (i, doc_bag) in s_bags.iter().enumerate() {
         let doc_tfidf: HashMap<String, f64> = doc_bag.tfidf(&s_idf);
         let sim: f64 = cosine_similarity(&q_tfidf, &doc_tfidf);
-
         println!("Idx: {}, Score = {:.4}", i, sim);
     }
 }

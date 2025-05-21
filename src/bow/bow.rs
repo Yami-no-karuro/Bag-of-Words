@@ -1,10 +1,4 @@
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{
-    Write, 
-    BufReader, 
-    BufRead
-};
 
 use crate::tokenizer::{
     Token, 
@@ -21,7 +15,6 @@ impl BoW {
     pub fn build(input: String) -> Self {
         let mut bag: HashMap<String, usize> = HashMap::new();
         let mut tokenizer: Tokenizer = Tokenizer::new(input);
-
         let tokens: Vec<Token> = tokenizer.tokenize();
         for token in tokens {
             if token.token_type == TokenType::Identifier {
@@ -44,42 +37,6 @@ impl BoW {
         }
 
         return tfidf_vec;
-    }
-
-    pub fn _load(name: &str) -> Self {
-        let mut bag: HashMap<String, usize> = HashMap::new();
-        let path: String = format!("bags/{}.csv", name);
-        let f: File = File::open(path)
-            .unwrap();
-
-        let reader: BufReader<File> = BufReader::new(f);
-        for line in reader.lines() {
-            let str_line: String = line.unwrap();
-            let parts: Vec<&str> = str_line.split("\",\"")
-                .collect();
-
-            let token: &str = parts[0].trim_matches('"');
-            let count: usize = parts[1].trim_matches('"')
-                .parse::<usize>()
-                .unwrap_or_default();
-
-            if count > 0 {
-                bag.insert(token.to_string(), count);
-            }
-        }
-
-        return Self { bag };
-    }
-
-    pub fn _save(&self, name: &str) {
-        let path: String = format!("bags/{}.csv", name);
-        let mut f: File = File::create(path)
-            .unwrap();
-
-        for (token, count) in self.iter() {
-            writeln!(&mut f, "\"{}\",\"{}\"", token, count)
-                .unwrap();
-        }
     }
 
     pub fn tokens(&self) -> impl Iterator<Item = &String> {
