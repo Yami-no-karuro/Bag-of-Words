@@ -38,6 +38,11 @@ Here's the general flow, step by step:
 6. **Cosine Similarity**  
    Finally, the query vector is compared with each document vector using cosine similarity, to determine which documents are most relevant.
 
+### Examples
+
+- (Back to the future) `cargo run source/ "What year is Marty trapped in?"`
+- (The Lord of the Rings) `cargo run source/ "What are the Rings of Power?"`
+
 ### Libraries & Honorable mentions
 
 - [Tokenizer](https://github.com/Yami-no-karuro/Tokenizer).
