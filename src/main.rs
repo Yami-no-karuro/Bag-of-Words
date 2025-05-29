@@ -45,7 +45,7 @@ fn handle_index_command(args: &[String]) {
     let mut source_bags: Vec<BoW> = Vec::new();
     if let Ok(paths) = fs::read_dir(source) {
         for (_idx, path) in paths.enumerate() {
-            let source: path::PathBuf = path.unwrap()
+            let source: PathBuf = path.unwrap()
                 .path();
 
             let mut content: String = String::new();
@@ -53,7 +53,9 @@ fn handle_index_command(args: &[String]) {
 
             f.read_to_string(&mut content).unwrap();
             let bag: BoW = BoW::build(content);
+            let dump: String = bag.to_string();
 
+            dbg!(dump);
             source_bags.push(bag);
         }
     } else {
@@ -61,7 +63,7 @@ fn handle_index_command(args: &[String]) {
         exit(1);
     }
 
-    dbg!(source_bags);
+    // dbg!(source_bags);
     exit(0);
 }
 
