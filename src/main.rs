@@ -2,15 +2,21 @@ mod bow;
 mod tokenizer;
 mod cli;
 
-use std::io::{Read, Write};
 use std::env;
 use std::fs;
 use std::fs::File;
 use std::path::PathBuf;
 use std::ffi::OsStr;
+use std::io::{
+    Read, 
+    Write
+};
 
 use bow::BoW;
-use cli::{exit, print_help};
+use cli::{
+    exit, 
+    print_help
+};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -46,7 +52,7 @@ fn handle_index_command(args: &[String]) {
                 .unwrap();
 
             let bag: BoW = BoW::build(content);
-            let dump: String = bag.to_string();
+            let bag_dump: String = bag.to_string();
 
             let s_name: &OsStr = source.file_name()
                 .unwrap();
@@ -55,7 +61,7 @@ fn handle_index_command(args: &[String]) {
 
             let model_fn: String = format!("models/{}", ss_name);
             let mut model_file: File = File::create(model_fn).unwrap();
-            model_file.write(dump.as_bytes())
+            model_file.write(bag_dump.as_bytes())
                 .unwrap();
         }
     } else {

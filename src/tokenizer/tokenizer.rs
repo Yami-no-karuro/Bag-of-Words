@@ -11,7 +11,8 @@ pub struct Tokenizer {
 impl Tokenizer {
     pub fn new(input: String) -> Self {
         return Tokenizer {
-            chars: input.chars().collect(),
+            chars: input.chars()
+                .collect(),
             position: 0,
         };
     }
@@ -48,8 +49,9 @@ impl Tokenizer {
 
     fn collect_identifier(&mut self) -> Option<Token> {
         let start: usize = self.position;
-        while self.position < self.chars.len() && self.chars[self.position].is_alphabetic() {
-            self.position += 1;
+        while self.position < self.chars.len() && self.chars[self.position]
+            .is_alphabetic() {
+                self.position += 1;
         }
 
         let identifier: String = self.chars[start..self.position]
@@ -65,8 +67,9 @@ impl Tokenizer {
 
     fn collect_number(&mut self) -> Option<Token> {
         let start: usize = self.position;
-        while self.position < self.chars.len() && self.chars[self.position].is_numeric() {
-            self.position += 1;
+        while self.position < self.chars.len() && self.chars[self.position]
+            .is_numeric() {
+                self.position += 1;
         }
 
         return Some(Token::new(
