@@ -1,22 +1,16 @@
-#![allow(dead_code)]
-
 mod bow;
 mod tokenizer;
 mod cli;
 
+use std::io::{Read, Write};
 use std::env;
-use std::io::Write;
-use std::io::Read;
 use std::fs;
 use std::fs::File;
 use std::path::PathBuf;
 use std::ffi::OsStr;
 
 use bow::BoW;
-use cli::{
-    exit,
-    print_help
-};
+use cli::{exit, print_help};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -53,6 +47,7 @@ fn handle_index_command(args: &[String]) {
 
             let bag: BoW = BoW::build(content);
             let dump: String = bag.to_string();
+
             let s_name: &OsStr = source.file_name()
                 .unwrap();
             let ss_name: &str = s_name.to_str()
