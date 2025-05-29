@@ -28,5 +28,16 @@ impl BoW {
 
         return Self { bag };
     }
+
+    pub fn to_string(&self) -> String {
+        let mut pairs: Vec<String> = Vec::new();
+        for (key, value) in &self.bag {
+            let pair_string: String = format!("{}:{}", key, value);
+            pairs.push(pair_string);
+        }
+
+        let result: String = pairs.join(",");
+        return result;
+    }
 }
 
