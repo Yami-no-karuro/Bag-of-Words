@@ -42,7 +42,7 @@ fn handle_index_command(args: &[String]) {
     }
 
     if let Ok(paths) = fs::read_dir(source) {
-        for (_idx, path) in paths.enumerate() {
+        for path in paths {
             let source: PathBuf = path.unwrap()
                 .path();
 
