@@ -5,11 +5,12 @@ mod tokenizer;
 mod cli;
 
 use std::env;
+use std::io::Write;
 use std::io::Read;
 use std::fs;
 use std::fs::File;
-use std::path;
 use std::path::PathBuf;
+use std::ffi::OsStr;
 
 use bow::BoW;
 use cli::{
@@ -18,9 +19,7 @@ use cli::{
 };
 
 fn main() {
-    let args: Vec<String> = env::args()
-        .collect();
-
+    let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         eprintln!("Error: no arguments provided.");
         print_help();
@@ -42,28 +41,33 @@ fn handle_index_command(args: &[String]) {
         exit(1);
     }
 
-    let mut source_bags: Vec<BoW> = Vec::new();
     if let Ok(paths) = fs::read_dir(source) {
         for (_idx, path) in paths.enumerate() {
             let source: PathBuf = path.unwrap()
                 .path();
 
             let mut content: String = String::new();
-            let mut f: File = File::open(source).unwrap();
+            let mut source_file: File = File::open(&source).unwrap();
+            source_file.read_to_string(&mut content)
+                .unwrap();
 
-            f.read_to_string(&mut content).unwrap();
             let bag: BoW = BoW::build(content);
             let dump: String = bag.to_string();
+            let s_name: &OsStr = source.file_name()
+                .unwrap();
+            let ss_name: &str = s_name.to_str()
+                .unwrap();
 
-            dbg!(dump);
-            source_bags.push(bag);
+            let model_fn: String = format!("models/{}", ss_name);
+            let mut model_file: File = File::create(model_fn).unwrap();
+            model_file.write(dump.as_bytes())
+                .unwrap();
         }
     } else {
         eprintln!("Error: unable to read the source (\"{}\") directory.", source);
         exit(1);
     }
 
-    // dbg!(source_bags);
     exit(0);
 }
 
