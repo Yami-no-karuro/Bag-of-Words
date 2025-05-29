@@ -1,19 +1,20 @@
+#![allow(dead_code)]
+
 mod bow;
 mod tokenizer;
-mod utils;
+mod cli;
 
 use std::env;
-use std::process;
-use std::collections::HashMap;
 use std::io::Read;
 use std::fs;
 use std::fs::File;
 use std::path;
+use std::path::PathBuf;
 
-use utils::cosine_similarity;
-use bow::{
-    BoW, 
-    DF
+use bow::BoW;
+use cli::{
+    exit,
+    print_help
 };
 
 fn main() {
@@ -21,45 +22,52 @@ fn main() {
         .collect();
 
     if args.len() < 2 {
-        eprintln!("Invalid arguments.");
-        eprintln!("Usage: {} <directory> <query>", args[0]);
-        process::exit(1);
+        eprintln!("Error: no arguments provided.");
+        print_help();
+        exit(1);
     }
 
-    let source: &str = &args[1];
-    let query: &str = &args[2];
+    let command: &str = &args[1];
+    match command {
+        "index" => handle_index_command(&args[2..]),
+        _ => handle_unknown_command(command)
+    }
+}
 
-    println!("Sources:");
-    let mut s_bags: Vec<BoW> = Vec::new();
+fn handle_index_command(args: &[String]) {
+    let source: &str = &args[0];
+    let source_path: PathBuf = PathBuf::from(source);
+    if !source_path.is_dir() {
+        eprintln!("Error: the provided source (\"{}\") is not a directory", source);
+        exit(1);
+    }
+
+    let mut source_bags: Vec<BoW> = Vec::new();
     if let Ok(paths) = fs::read_dir(source) {
-        for (idx, path) in paths.enumerate() {
+        for (_idx, path) in paths.enumerate() {
             let source: path::PathBuf = path.unwrap()
                 .path();
 
-            println!("Idx: {}, Source: \"{}\"", idx, source.display());
             let mut content: String = String::new();
-            let mut f: File = File::open(source)
-                .unwrap();
+            let mut f: File = File::open(source).unwrap();
 
             f.read_to_string(&mut content).unwrap();
             let bag: BoW = BoW::build(content);
-            s_bags.push(bag);
+
+            source_bags.push(bag);
         }
+    } else {
+        eprintln!("Error: unable to read the source (\"{}\") directory.", source);
+        exit(1);
     }
 
-    let s_df: DF = DF::build(&s_bags);
-    let s_idf: HashMap<String, f64> = s_df.idf();
+    dbg!(source_bags);
+    exit(0);
+}
 
-    let q_bag: BoW = BoW::build(query.to_string());
-    let q_tfidf = q_bag.tfidf(&s_idf);
-
-    println!("Query: \"{}\"", query);
-    println!("Results:");
-
-    for (i, doc_bag) in s_bags.iter().enumerate() {
-        let doc_tfidf: HashMap<String, f64> = doc_bag.tfidf(&s_idf);
-        let sim: f64 = cosine_similarity(&q_tfidf, &doc_tfidf);
-        println!("Idx: {}, Score = {:.4}", i, sim);
-    }
+fn handle_unknown_command(command: &str) {
+    eprintln!("Error: unknown command \"{}\".", command);
+    print_help();
+    exit(1);
 }
 
