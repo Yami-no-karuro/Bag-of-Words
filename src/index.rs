@@ -11,9 +11,12 @@ use std::io::{
 };
 
 use crate::bow::BoW;
-use crate::utils::exit;
+use crate::utils::{
+    get_unix_timestamp,
+    exit
+};
 
-fn read_content(path: &Path) -> String {
+fn read_source_content(path: &Path) -> String {
     let mut content: String = String::new();
     let mut file: File = File::open(path).unwrap();
     file.read_to_string(&mut content)
@@ -22,23 +25,41 @@ fn read_content(path: &Path) -> String {
     return content;
 }
 
-fn write_content(filename: &str, content: &str) {
-    let output_path: String = format!("models/{}", filename);
+fn dump_source_model(filename: &str, content: &str) {
+    let output_path: String = format!("models/{}.mdl", filename);
     let mut file: File = File::create(output_path).unwrap();
     file.write_all(content.as_bytes())
         .unwrap();
 }
 
 fn process_source(path: &Path) {
-    let content: String = read_content(path);
+    let content: String = read_source_content(path);
     let bag: BoW = BoW::build(content);
-    let dump: String = bag.to_string();
-
     let name: &str = path.file_name()
         .and_then(OsStr::to_str)
         .unwrap();
 
-    write_content(name, &dump);
+    let dump: String = bag.to_string();
+    let metadata: String = get_metadata(&path, &bag);
+    let output: String = format!("{}\n[{}]", metadata, dump);
+    dump_source_model(name, &output);
+}
+
+fn get_metadata(path: &Path, bow: &BoW) -> String {
+    let source = path.display();
+    let timestamp: u64 = get_unix_timestamp();
+    let size: usize = bow.get_vocabulary_size();
+    let total: usize = bow.get_total_occurences();
+
+    let metadata: String = format!(
+        "source: {}\ntime: {}\nsize: {}\ntotal: {}",
+        source,
+        timestamp,
+        size,
+        total
+    );
+
+    return metadata;
 }
 
 pub fn handle_index(args: &[String]) {

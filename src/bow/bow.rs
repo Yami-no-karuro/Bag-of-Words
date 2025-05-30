@@ -39,5 +39,14 @@ impl BoW {
         let result: String = pairs.join(",");
         return result;
     }
+
+    pub fn get_vocabulary_size(&self) -> usize {
+        return self.bag.len();
+    }
+
+    pub fn get_total_occurences(&self) -> usize {
+        return self.bag.values()
+            .sum();
+    }
 }
 
