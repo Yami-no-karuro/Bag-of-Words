@@ -1,19 +1,16 @@
 mod bow;
 mod tokenizer;
-mod cli;
+mod utils;
+
+mod unknown;
+mod index;
+mod search;
 
 use std::env;
-use std::fs;
-use std::fs::File;
-use std::path::PathBuf;
-use std::ffi::OsStr;
-use std::io::{
-    Read, 
-    Write
-};
-
-use bow::BoW;
-use cli::{
+use index::handle_index;
+use search::handle_search;
+use unknown::handle_unknown;
+use utils::{
     exit, 
     print_help
 };
@@ -28,53 +25,9 @@ fn main() {
 
     let command: &str = &args[1];
     match command {
-        "index" => handle_index_command(&args[2..]),
-        _ => handle_unknown_command(command)
+        "index" => handle_index(&args[2..]),
+        "search" => handle_search(&args[2..]),
+        _ => handle_unknown(command)
     }
-}
-
-fn handle_index_command(args: &[String]) {
-    let source: &str = &args[0];
-    let source_path: PathBuf = PathBuf::from(source);
-    if !source_path.is_dir() {
-        eprintln!("Error: the provided source (\"{}\") is not a directory", source);
-        exit(1);
-    }
-
-    if let Ok(paths) = fs::read_dir(source) {
-        for path in paths {
-            let source: PathBuf = path.unwrap()
-                .path();
-
-            let mut content: String = String::new();
-            let mut source_file: File = File::open(&source).unwrap();
-            source_file.read_to_string(&mut content)
-                .unwrap();
-
-            let bag: BoW = BoW::build(content);
-            let bag_dump: String = bag.to_string();
-
-            let s_name: &OsStr = source.file_name()
-                .unwrap();
-            let ss_name: &str = s_name.to_str()
-                .unwrap();
-
-            let model_fn: String = format!("models/{}", ss_name);
-            let mut model_file: File = File::create(model_fn).unwrap();
-            model_file.write(bag_dump.as_bytes())
-                .unwrap();
-        }
-    } else {
-        eprintln!("Error: unable to read the source (\"{}\") directory.", source);
-        exit(1);
-    }
-
-    exit(0);
-}
-
-fn handle_unknown_command(command: &str) {
-    eprintln!("Error: unknown command \"{}\".", command);
-    print_help();
-    exit(1);
 }
 
