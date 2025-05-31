@@ -5,6 +5,7 @@ use std::path::{
     Path, 
     PathBuf
 };
+
 use std::io::{
     Read, 
     Write
@@ -42,21 +43,17 @@ fn process_source(path: &Path) {
     let dump: String = bag.to_string();
     let metadata: String = get_metadata(&path, &bag);
     let output: String = format!("{}\n[{}]", metadata, dump);
+
     dump_source_model(name, &output);
 }
 
 fn get_metadata(path: &Path, bow: &BoW) -> String {
-    let source = path.display();
-    let timestamp: u64 = get_unix_timestamp();
-    let size: usize = bow.get_vocabulary_size();
-    let total: usize = bow.get_total_occurences();
-
     let metadata: String = format!(
         "source: {}\ntime: {}\nsize: {}\ntotal: {}",
-        source,
-        timestamp,
-        size,
-        total
+        path.display(),
+        get_unix_timestamp(),
+        bow.get_vocabulary_size(),
+        bow.get_total_occurences()
     );
 
     return metadata;
