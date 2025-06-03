@@ -1,50 +1,31 @@
 use std::fs;
-use std::fs::File;
 use std::ffi::OsStr;
 use std::path::{
     Path, 
     PathBuf
 };
 
-use std::io::{
-    Read, 
-    Write
-};
-
 use crate::bow::BoW;
 use crate::utils::{
+    read_content,
+    dump_content,
     get_unix_timestamp,
     exit
 };
 
-fn read_source_content(path: &Path) -> String {
-    let mut content: String = String::new();
-    let mut file: File = File::open(path).unwrap();
-    file.read_to_string(&mut content)
-        .unwrap();
-
-    return content;
-}
-
-fn dump_source_model(filename: &str, content: &str) {
-    let output_path: String = format!("models/{}.mdl", filename);
-    let mut file: File = File::create(output_path).unwrap();
-    file.write_all(content.as_bytes())
-        .unwrap();
-}
-
 fn process_source(path: &Path) {
-    let content: String = read_source_content(path);
-    let bag: BoW = BoW::build(content);
+    let source: String = read_content(path).unwrap();
     let name: &str = path.file_name()
         .and_then(OsStr::to_str)
         .unwrap();
 
+    let bag: BoW = BoW::build(source);
     let dump: String = bag.to_string();
     let metadata: String = get_metadata(&path, &bag);
     let output: String = format!("{}\n[{}]", metadata, dump);
 
-    dump_source_model(name, &output);
+    let o_path: String = format!("models/{}.mdl", name);
+    dump_content(&o_path, &output).unwrap();
 }
 
 fn get_metadata(path: &Path, bow: &BoW) -> String {

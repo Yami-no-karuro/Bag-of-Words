@@ -10,10 +10,7 @@ use std::env;
 use index::handle_index;
 use search::handle_search;
 use unknown::handle_unknown;
-use utils::{
-    exit, 
-    print_help
-};
+use utils::exit;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -29,5 +26,11 @@ fn main() {
         "search" => handle_search(&args[2..]),
         _ => handle_unknown(command)
     }
+}
+
+fn print_help() {
+    println!("Usage: ");
+    println!("- index <path>");
+    println!("- search <query>");
 }
 
