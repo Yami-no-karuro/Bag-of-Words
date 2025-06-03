@@ -6,9 +6,10 @@ use std::io::{
     Write
 };
 
-pub fn read_content(path: &Path) -> Result<String, io::Error> {
+pub fn read_content(path: &str) -> Result<String, io::Error> {
+    let source: &Path = Path::new(path);
     let mut content: String = String::new();
-    let mut file: File = File::open(path)?;
+    let mut file: File = File::open(source)?;
     file.read_to_string(&mut content)?;
 
     return Ok(content);
