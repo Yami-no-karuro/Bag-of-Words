@@ -13,6 +13,18 @@ use crate::utils::fs::{
     dump_content
 };
 
+fn get_metadata(path: &Path, bow: &BoW) -> String {
+    let metadata: String = format!(
+        "{},{},{},{}",
+        path.display(),
+        get_unix_timestamp(),
+        bow.get_vocabulary_size(),
+        bow.get_total_occurences()
+    );
+
+    return metadata;
+}
+
 fn process_source(path: &Path) {
     let source: String = read_content(path).unwrap();
     let name: &str = path.file_name()
@@ -26,18 +38,6 @@ fn process_source(path: &Path) {
 
     let o_path: String = format!("models/{}.mdl", name);
     dump_content(&o_path, &output).unwrap();
-}
-
-fn get_metadata(path: &Path, bow: &BoW) -> String {
-    let metadata: String = format!(
-        "{},{},{},{}",
-        path.display(),
-        get_unix_timestamp(),
-        bow.get_vocabulary_size(),
-        bow.get_total_occurences()
-    );
-
-    return metadata;
 }
 
 pub fn handle_index(args: &[String]) {
