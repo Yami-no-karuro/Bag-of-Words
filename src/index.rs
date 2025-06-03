@@ -15,10 +15,11 @@ use crate::utils::fs::{
 };
 
 fn get_metadata(path: &str, bow: &BoW) -> String {
+    let time: u64 = get_unix_timestamp().unwrap();
     let metadata: String = format!(
         "{},{},{},{}",
         path,
-        get_unix_timestamp(),
+        time,
         bow.get_vocabulary_size(),
         bow.get_total_occurences()
     );
@@ -44,7 +45,10 @@ fn process_dir_entry(entry: DirEntry) {
     let output: String = format!("{}\n[{}]", metadata, dump);
     let output_path: String = format!("models/{}.mdl", name_str);
 
-    dump_content(&output_path, &output).unwrap();
+    dump_content(
+        &output_path, 
+        &output
+    ).unwrap();
 }
 
 pub fn handle_index(args: &[String]) {
