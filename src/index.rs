@@ -26,7 +26,7 @@ fn get_metadata(path: &str, bow: &BoW) -> String {
     return metadata;
 }
 
-fn process_source(entry: DirEntry) {
+fn process_dir_entry(entry: DirEntry) {
     let name: OsString = entry.file_name();
     let name_str: &str = name.to_str()
         .unwrap();
@@ -43,6 +43,7 @@ fn process_source(entry: DirEntry) {
     let dump: String = bag.to_string();
     let output: String = format!("{}\n[{}]", metadata, dump);
     let output_path: String = format!("models/{}.mdl", name_str);
+
     dump_content(&output_path, &output).unwrap();
 }
 
@@ -57,7 +58,7 @@ pub fn handle_index(args: &[String]) {
     if let Ok(entries) = fs::read_dir(source) {
         for entry in entries {
             let dir_entry: DirEntry = entry.unwrap();
-            process_source(dir_entry);
+            process_dir_entry(dir_entry);
         }
     } else {
         eprintln!("Error: unable to read the source (\"{}\") directory.", source);
