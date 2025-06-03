@@ -10,7 +10,7 @@ use std::env;
 use index::handle_index;
 use search::handle_search;
 use unknown::handle_unknown;
-use utils::exit;
+use utils::proc::exit;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

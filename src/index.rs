@@ -6,11 +6,11 @@ use std::path::{
 };
 
 use crate::bow::BoW;
-use crate::utils::{
+use crate::utils::proc::exit;
+use crate::utils::time::get_unix_timestamp;
+use crate::utils::fs::{
     read_content,
-    dump_content,
-    get_unix_timestamp,
-    exit
+    dump_content
 };
 
 fn process_source(path: &Path) {
@@ -30,7 +30,7 @@ fn process_source(path: &Path) {
 
 fn get_metadata(path: &Path, bow: &BoW) -> String {
     let metadata: String = format!(
-        "source: {}\ntime: {}\nsize: {}\ntotal: {}",
+        "{},{},{},{}",
         path.display(),
         get_unix_timestamp(),
         bow.get_vocabulary_size(),
