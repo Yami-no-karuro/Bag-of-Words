@@ -27,7 +27,7 @@ fn get_metadata(path: &str, bow: &BoW) -> String {
     return metadata;
 }
 
-fn process_dir_entry(entry: DirEntry) {
+fn dump_source(entry: DirEntry) {
     let name: OsString = entry.file_name();
     let name_str: &str = name.to_str()
         .unwrap();
@@ -62,7 +62,7 @@ pub fn handle_index(args: &[String]) {
     if let Ok(entries) = fs::read_dir(source) {
         for entry in entries {
             let dir_entry: DirEntry = entry.unwrap();
-            process_dir_entry(dir_entry);
+            dump_source(dir_entry);
         }
     } else {
         eprintln!("Error: unable to read the source (\"{}\") directory.", source);
