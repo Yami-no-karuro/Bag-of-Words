@@ -5,6 +5,7 @@ use std::path::{
     PathBuf
 };
 
+use crate::bow::BoW;
 use crate::utils::proc::exit;
 use crate::utils::fs::read_content;
 
@@ -15,11 +16,24 @@ fn load_source(entry: DirEntry) {
         .unwrap();
 
     if let Some(extension) = path.extension() {
-        if extension == "mdl" {
-            let source: String = read_content(path_str).unwrap();
-            dbg!(source.lines().next());
+        if extension != "mdl" {
+            return;
         }
+    } else {
+        return;
     }
+
+    let source: String = read_content(path_str).unwrap();
+    let mut lines = source.lines();
+    let metadata: &str = lines.next()
+        .unwrap();
+
+    let content: &str = lines.next()
+        .unwrap();
+
+    let bag: BoW = BoW::from_serialized(content);
+    dbg!(metadata);
+    dbg!(bag);
 }
 
 pub fn handle_search(args: &[String]) {
@@ -34,7 +48,6 @@ pub fn handle_search(args: &[String]) {
         exit(1);
     }
 
-    dbg!(query);
     exit(0);
 }
 

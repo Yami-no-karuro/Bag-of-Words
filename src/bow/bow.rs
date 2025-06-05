@@ -29,7 +29,7 @@ impl BoW {
         return Self { bag };
     }
 
-    pub fn to_string(&self) -> String {
+    pub fn to_serialized(&self) -> String {
         let mut pairs: Vec<String> = Vec::new();
         for (key, value) in &self.bag {
             let pair_string: String = format!("{}:{}", key, value);
@@ -38,6 +38,25 @@ impl BoW {
 
         let result: String = pairs.join(",");
         return result;
+    }
+
+    pub fn from_serialized(serialized: &str) -> Self {
+        let mut bag: HashMap<String, usize> = HashMap::new();
+        for pair in serialized.split(",") {
+            let mut splits = pair.split(":");
+            let word: String = splits.next()
+                .unwrap()
+                .to_string();
+
+            let count: usize = splits.next()
+                .unwrap()
+                .parse::<usize>()
+                .unwrap();
+
+            bag.insert(word, count);
+        }
+        
+        return Self { bag };
     }
 
     pub fn get_vocabulary_size(&self) -> usize {

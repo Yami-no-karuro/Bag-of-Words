@@ -31,21 +31,29 @@ fn get_metadata(path: &str, bow: &BoW) -> String {
 }
 
 fn dump_source(entry: DirEntry) {
-    let name: OsString = entry.file_name();
-    let name_str: &str = name.to_str()
-        .unwrap();
-
     let path_buf: PathBuf = entry.path();
     let path: &Path = path_buf.as_path();
     let path_str: &str = path.to_str()
+        .unwrap();
+
+    if let Some(extension) = path.extension() {
+        if extension != "txt" {
+            return;
+        }
+    } else {
+        return;
+    }
+
+    let name: OsString = entry.file_name();
+    let name_str: &str = name.to_str()
         .unwrap();
 
     let source: String = read_content(path_str).unwrap();
     let bag: BoW = BoW::build(source);
     let metadata: String = get_metadata(path_str, &bag);
 
-    let dump: String = bag.to_string();
-    let output: String = format!("{}\n[{}]", metadata, dump);
+    let dump: String = bag.to_serialized();
+    let output: String = format!("{}\n{}", metadata, dump);
     let output_path: String = format!("models/{}.mdl", name_str);
 
     dump_content(
