@@ -17,7 +17,7 @@ fn load_source(entry: DirEntry) {
     if let Some(extension) = path.extension() {
         if extension == "mdl" {
             let source: String = read_content(path_str).unwrap();
-            dbg!(source);
+            dbg!(source.lines().next());
         }
     }
 }

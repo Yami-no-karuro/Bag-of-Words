@@ -16,12 +16,15 @@ use crate::utils::fs::{
 
 fn get_metadata(path: &str, bow: &BoW) -> String {
     let time: u64 = get_unix_timestamp().unwrap();
+    let size: usize = bow.get_vocabulary_size();
+    let occurrences: usize = bow.get_total_occurences();
+
     let metadata: String = format!(
         "{},{},{},{}",
         path,
         time,
-        bow.get_vocabulary_size(),
-        bow.get_total_occurences()
+        size,
+        occurrences
     );
 
     return metadata;
